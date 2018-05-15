@@ -21,7 +21,6 @@ bot.on('ready', () => {
 bot.on('message', message => {
   if (!message.content.startsWith(prefix)) return;
   if (!message.guild) return;
-  if (message.channel.topic.includes("no bots")) return;
   let mArray = message.content.toLowercase().split(" ");
   let args = mArray.slice(1);
   let logcmd = mArray.slice(prefix.length)
