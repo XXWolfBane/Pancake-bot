@@ -1,7 +1,7 @@
 const discord = require('discord.js'),
 bot = new discord.Client(),
 config = require('./config.json'),
-prefix = ".",
+prefix = "P!",
 {baselogger} = require('./logger.js')
 bot.login(process.env.token);
 
@@ -22,7 +22,7 @@ require('fs').readdir("./commands/", (err, files) => {
 bot.on('guildMemberAdd', (member) => require('./events/guildMemberAdd.js')(bot, member))
 
 bot.on('ready', () => {
-  var statuses = [I'm alive!]
+  var statuses = ["over Himiachi Base", "bot moosic", "bot gamez"]
   var result = statuses[Math.floor(Math.random() * statuses.length)]
   bot.user.setActivity(`Loading Himiachi...`, {type: "STREAMING", url: "https://twitch.tv/xxwolfbaneyt"})
   setTimeout(() => {
@@ -60,4 +60,3 @@ bot.on('message', message => {
     console.log(`${message.author.username} used the ${message.content.split(" ")[0]} command.`)
     baselogger(bot, `**Command Run**\n\n**Command:** ${message.content.split(" ")[0]}\n**User:** ${message.author.tag}\n**Message:** ${message.content}\n**Guild:** ${message.guild.name}\n**Channel:** ${message.channel.name}`);
   }
-})
