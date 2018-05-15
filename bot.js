@@ -21,7 +21,7 @@ bot.on('ready', () => {
 bot.on('message', message => {
   if (!message.content.startsWith(prefix)) return;
   if (!message.guild) return;
-  let mArray = message.content.toLowercase().split(" ");
+  let mArray = message.content.split(" ").toLowercase()
   let args = mArray.slice(1);
   let logcmd = mArray.slice(prefix.length)
   let cmd = bot.commands.get(logcmd)
