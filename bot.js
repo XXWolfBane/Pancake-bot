@@ -22,7 +22,7 @@ require('fs').readdir("./commands/", (err, files) => {
 bot.on('guildMemberAdd', (member) => require('./events/guildMemberAdd.js')(bot, member))
 
 bot.on('ready', () => {
-  var statuses = ["over Himiachi Base", "bot moosic", "bot gamez"]
+  var statuses = [I'm alive!]
   var result = statuses[Math.floor(Math.random() * statuses.length)]
   bot.user.setActivity(`Loading Himiachi...`, {type: "STREAMING", url: "https://twitch.tv/xxwolfbaneyt"})
   setTimeout(() => {
