@@ -2,7 +2,7 @@ const discord = require('discord.js')
 const bot = new discord.Client()
 const pre = process.env.prefix
 const prefix = pre.toLowercase()
-const {baselogger};
+//const {baselogger};
 
 bot.commands = new discord.Collection();
 
