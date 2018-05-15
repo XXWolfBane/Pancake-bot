@@ -23,7 +23,7 @@ bot.on('message', message => {
   if (!message.guild) return;
   let mArray = message.content.toLowerCase().split(" ")
   let args = mArray.slice(1);
-  let logcmd = mArray.slice(prefix.length)
+  let logcmd = mArray[0].slice(prefix.length)
   let cmd = bot.commands.get(logcmd)
   
   if (cmd) {
