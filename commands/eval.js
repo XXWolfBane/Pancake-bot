@@ -1,5 +1,7 @@
+const config = require('../config.json')
+
 module.exports.run = (bot, message, args, discord) => {
-  if (message.author.id == process.env.oid) {
+  if (config.owners.includes(message.author.id)) {
     const content = message.content.split(' ').slice(1).join(' ');
   const result = new Promise((resolve, reject) => resolve(eval(content)));
 
