@@ -4,3 +4,7 @@ let em = new discord.RichEmbed()
 .addField("Owners", "Wolfy!")
 .addField("Developers!", "FHG Dev")
 .setColor("BLUE")
+.setThumbnail(bot.user.avatarURL)
+.setFooter(message.author.username)
+.setTimestamp()
+}
