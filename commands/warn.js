@@ -1,15 +1,15 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const ms = require("ms");
-let warns = JSON.parse(fs.readFileSync("./warnings.json", "utf8"));
+let warns = JSON.parse(fs.readFileSync("../json/warnings.json", "utf8"));
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = (bot, message, args) => {
 
   //!warn @daeshan <reason>
-  if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.reply("No can do pal!");
+  if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.channel.send("No can do pal!");
   let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0])
-  if(!wUser) return message.reply("Couldn't find them yo");
-  if(wUser.hasPermission("MANAGE_MESSAGES")) return message.reply("They waaaay too kewl");
+  if(!wUser) return message.channel.send("Couldn't find them yo");
+  if(wUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("They waaaay too kewl");
   let reason = args.join(" ").slice(22);
 
   if(!warns[wUser.id]) warns[wUser.id] = {
@@ -18,7 +18,7 @@ module.exports.run = async (bot, message, args) => {
 
   warns[wUser.id].warns++;
 
-  fs.writeFile("./warnings.json", JSON.stringify(warns), (err) => {
+  fs.writeFile("../json/warnings.json", JSON.stringify(warns), (err) => {
     if (err) console.log(err)
   });
 
@@ -27,31 +27,36 @@ module.exports.run = async (bot, message, args) => {
   .setAuthor(message.author.username)
   .setColor("#fc6400")
   .addField("Warned User", `<@${wUser.id}>`)
-  .addField("Warned In", message.channel)
+  .addField("Warned In", message.channel.name)
   .addField("Number of Warnings", warns[wUser.id].warns)
   .addField("Reason", reason);
-
-  let warnchannel = message.guild.channels.find(`name`, "incidents");
-  if(!warnchannel) return message.reply("Couldn't find channel");
+  
+var warnchannel;
+  message.guild.channels.forEach(channel => {
+    if (channel.topic.toLowerCase().includes("bot log") {
+          warnchannel = channel;
+        }
+  })
+  if (!warnchannel) return message.channel.send("Couldn't find channel");
 
   warnchannel.send(warnEmbed);
 
   if(warns[wUser.id].warns == 2){
-    let muterole = message.guild.roles.find(`name`, "muted");
+    let muterole = message.guild.roles.find(`name`, "Muted");
     if(!muterole) return message.reply("You should create that role dude.");
 
     let mutetime = "10s";
     await(wUser.addRole(muterole.id));
     message.channel.send(`<@${wUser.id}> has been temporarily muted`);
 
-    setTimeout(function(){
+    setTimeout(() => {
       wUser.removeRole(muterole.id)
       message.reply(`<@${wUser.id}> has been unmuted.`)
     }, ms(mutetime))
   }
   if(warns[wUser.id].warns == 3){
-    message.guild.member(wUser).ban(reason);
-    message.reply(`<@${wUser.id}> has been banned.`)
+    wUser.ban(reason);
+    message.channel.send(`<@${wUser.id}> has been banned.`)
   }
 
 }
