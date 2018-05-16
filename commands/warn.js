@@ -33,7 +33,7 @@ module.exports.run = (bot, message, args) => {
   
 var warnchannel;
   message.guild.channels.forEach(channel => {
-    if (channel.topic.toLowerCase().includes("bot log") {
+    if (channel.topic.toLowerCase().includes("bot log")) {
           warnchannel = channel;
         }
   })
