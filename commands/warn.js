@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const ms = require("ms");
-let warns = JSON.parse(fs.readFile("../json/warnings.json", "utf8"));
+let warns = fs.readFile("../json/warnings.json", "utf8");
 
 module.exports.run = (bot, message, args) => {
 
