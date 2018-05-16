@@ -1,15 +1,15 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const ms = require("ms");
-let warns = fs.readFile("../json/warnings.json", "utf8", (err) => console.error(err));
+let warns = require('../json/warnings.json').warns
 
-module.exports.run = (bot, message, args) => {
+module.exports.run = async (bot, message, args) => {
 
   //!warn @daeshan <reason>
-  if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.channel.send("No can do pal!");
-  let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0])
-  if(!wUser) return message.channel.send("Couldn't find them yo");
-  if(wUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("They waaaay too kewl");
+  if(!message.member.hasPermission("MANAGE_SERVER")) return message.channel.send("No can do pal!");
+  let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.find('name', args[0])
+  if(!wUser) return message.channel.send("Couldn't find them...");
+  if(wUser.hasPermission("MANAGE_SERVER") || wUser.hasPermission("ADMINISTRATOR")) return message.channel.send("They aren't warnable.");
   let reason = args.join(" ").slice(22);
 
   if(!warns[wUser.id]) warns[wUser.id] = {
@@ -43,18 +43,21 @@ var warnchannel;
 
   if(warns[wUser.id].warns == 2){
     let muterole = message.guild.roles.find(`name`, "Muted");
-    if(!muterole) return message.reply("You should create that role dude.");
-
-    let mutetime = "10s";
+    if(!muterole) return message.channel.send(`You need to create a mute role dude.`);
     await(wUser.addRole(muterole.id));
     message.channel.send(`<@${wUser.id}> has been temporarily muted`);
 
     setTimeout(() => {
       wUser.removeRole(muterole.id)
-      message.reply(`<@${wUser.id}> has been unmuted.`)
-    }, ms(mutetime))
+      message.channel.send(`<@${wUser.id}> has been unmuted.`)
+    }, ms("30s"))
   }
-  if(warns[wUser.id].warns == 3){
+  if (warns[wUser.id].warns == 3) {
+    wUser.kick(reason)
+    message.channel.send(`<${wUser.id}> has been kicked.`)
+  }
+  
+  if(warns[wUser.id].warns == 6){
     wUser.ban(reason);
     message.channel.send(`<@${wUser.id}> has been banned.`)
   }
