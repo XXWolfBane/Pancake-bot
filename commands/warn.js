@@ -29,7 +29,9 @@ module.exports.run = async (bot, message, args) => {
   .addField("Warned User", `<@${wUser.id}>`)
   .addField("Warned In", message.channel.name)
   .addField("Number of Warnings", warns[wUser.id].warns)
-  .addField("Reason", reason);
+  if (reason) {
+    warnEmbed.addField("Reason", reason);
+  }
   
 var warnchannel;
   message.guild.channels.forEach(channel => {
