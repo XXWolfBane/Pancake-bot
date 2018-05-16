@@ -9,7 +9,7 @@ module.exports.run = async (bot, message, args) => {
   if(!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send("No can do pal!");
   let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.find('name', args[0])
   if(!wUser) return message.channel.send("Couldn't find them...");
-  if(wUser.hasPermission("MANAGE_SERVER") || wUser.hasPermission("ADMINISTRATOR")) return message.channel.send("They aren't warnable.");
+  if(wUser.hasPermission("MANAGE_GUILD") || wUser.hasPermission("ADMINISTRATOR")) return message.channel.send("They aren't warnable.");
   let reason = args.join(" ").slice(22);
 
   if(!warns[wUser.id]) warns[wUser.id] = {
