@@ -6,7 +6,7 @@ let warns = require('../json/warnings.json').warns
 module.exports.run = async (bot, message, args) => {
 
   //!warn @daeshan <reason>
-  if(!message.member.hasPermission("MANAGE_SERVER")) return message.channel.send("No can do pal!");
+  if(!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send("No can do pal!");
   let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.find('name', args[0])
   if(!wUser) return message.channel.send("Couldn't find them...");
   if(wUser.hasPermission("MANAGE_SERVER") || wUser.hasPermission("ADMINISTRATOR")) return message.channel.send("They aren't warnable.");
