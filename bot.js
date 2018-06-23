@@ -1,9 +1,13 @@
-const discord = require('discord.js')
-const bot = new discord.Client()
-const prefix = process.env.prefix
-//const {baselogger};
+const discord = require('discord.js'),
+bot = new discord.Client(),
+config = require('./config.json'),
+prefix = ".",
+{baselogger} = require('./logger.js')
+bot.login(process.env.token);
 
-bot.commands = new discord.Collection();
+// ===Loading commands===
+
+bot.commands = new discord.Collection()
 
 require('fs').readdir("./commands/", (err, files) => {
   console.log("Loading commands...");
@@ -13,25 +17,45 @@ require('fs').readdir("./commands/", (err, files) => {
   });
 });
 
+// ===Done Loading commands===
+
+bot.on('guildMemberAdd', (member) => require('./events/guildMemberAdd.js')(bot, member))
+
 bot.on('ready', () => {
-  bot.user.setActivity(`for ${prefix}help | ${bot.guilds.size} servers`, {type: "WATCHING"});
-  console.log("Pancake READY!");
+  var statuses = ["over Himiachi Base", "bot moosic", "bot gamez"]
+  var result = statuses[Math.floor(Math.random() * statuses.length)]
+  bot.user.setActivity(`Loading Himiachi...`, {type: "STREAMING", url: "https://twitch.tv/freakinghulk"})
+  setTimeout(() => {
+    setInterval(() => {
+      if (result == statuses[0]) {
+        bot.user.setActivity(result, {type: "WATCHING"})
+      }
+   
+      if (result == statuses[1]) {
+        bot.user.setActivity(result, {type: "LISTENING"})
+      }
+   
+      if (result == statuses[2]) {
+        bot.user.setActivity(result, {type: "PLAYING"})
+      }
+    }, 25000)
+  }, 10000)
+    console.log("Himiachi ready!")
 })
+ // ==Rotator==
 
 bot.on('message', message => {
-  if (!message.content.startsWith(prefix)) return;
-  if (!message.guild) return;
+  let mArray = message.content.split(" ")
+  let args = mArray.slice(1)
+  let cmd = bot.commands.get(mArray[0].slice(prefix.length))
   if (message.author.bot) return;
-  let mArray = message.content.toLowerCase().split(" ")
-  let args = mArray.slice(1);
-  let logcmd = mArray[0].slice(prefix.length)
-  let cmd = bot.commands.get(logcmd)
+  if (message.channel.type == "dm") return;
+  if (!message.content.startsWith(prefix)) return;
   
   if (cmd) {
-      cmd.run(bot, message, args, discord)
-      console.log(`${message.author.username} used the ${logcmd} command.`)
-      // SOON => baselogger(bot, `${message.author.username} used the ${logcmd} command.`, bot.user.avatarURL)
+    if (config.ubl.includes(message.author.id)) return;
+    cmd.run(bot, message, args, discord)
+    console.log(`${message.author.username} used the ${message.content.split(" ")[0]} command.`)
+    baselogger(bot, `**Command Run**\n\n**Command:** ${message.content.split(" ")[0]}\n**User:** ${message.author.tag}\n**Message:** ${message.content}\n**Guild:** ${message.guild.name}\n**Channel:** ${message.channel.name}`);
   }
 })
-
-bot.login(process.env.token)
